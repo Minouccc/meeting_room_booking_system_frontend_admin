@@ -6,6 +6,9 @@ import { UserManage } from "./container/UserManage";
 import { ErrorPage } from "./container/ErrorPage";
 import { Login } from "./container/Login";
 import { Menu } from "./container/Menu";
+import { ModifyMenu } from "./container/ModifyMenu";
+import { InfoModify } from "./container/InfoModify";
+import { PasswordModify } from "./container/PasswordModify";
 
 const routes = [
   {
@@ -23,6 +26,20 @@ const routes = [
           },
         ],
       },
+      {
+        path: "/user",
+        element: <ModifyMenu></ModifyMenu>,
+        children: [
+          {
+            path: "info_modify",
+            element: <InfoModify />,
+          },
+          {
+            path: "password_modify",
+            element: <PasswordModify />,
+          },
+        ],
+      },
     ],
   },
   {
@@ -30,7 +47,7 @@ const routes = [
     element: <Login />,
   },
 ];
-const router = createBrowserRouter(routes);
+export const router = createBrowserRouter(routes);
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

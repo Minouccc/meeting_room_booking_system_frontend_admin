@@ -1,5 +1,7 @@
 import { message } from "antd";
 import axios from "axios";
+import { UserInfo } from "../container/InfoModify";
+import { UpdatePassword } from "../container/PasswordModify";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:3005/",
@@ -48,6 +50,41 @@ axiosInstance.interceptors.request.use(function (config) {
   return config;
 });
 
+async function refreshToken() {
+  const res = await axiosInstance.get("/user/admin/refresh", {
+    params: {
+      refresh_token: localStorage.getItem("refresh_token"),
+    },
+  });
+  localStorage.setItem("access_token", res.data.access_token);
+  localStorage.setItem("refresh_token", res.data.refresh_token);
+  return res;
+}
+
+export async function getUserInfo() {
+  return await axiosInstance.get("/user/info");
+}
+
+export async function updateInfo(data: UserInfo) {
+  return await axiosInstance.post("/user/admin/update", data);
+}
+
+export async function updateUserInfoCaptcha() {
+  return await axiosInstance.get("/user/update/captcha");
+}
+
+export async function updatePasswordCaptcha(email: string) {
+  return await axiosInstance.get("/user/update_password/captcha", {
+    params: {
+      address: email,
+    },
+  });
+}
+
+export async function updatePassword(data: UpdatePassword) {
+  return await axiosInstance.post("/user/admin/update_password", data);
+}
+
 axiosInstance.interceptors.response.use(
   (response) => {
     return response;
@@ -72,14 +109,3 @@ axiosInstance.interceptors.response.use(
     }
   }
 );
-
-async function refreshToken() {
-  const res = await axiosInstance.get("/user/admin/refresh", {
-    params: {
-      refresh_token: localStorage.getItem("refresh_token"),
-    },
-  });
-  localStorage.setItem("access_token", res.data.access_token);
-  localStorage.setItem("refresh_token", res.data.refresh_token);
-  return res;
-}
